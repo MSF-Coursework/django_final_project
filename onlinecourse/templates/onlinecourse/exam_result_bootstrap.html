@@ -48,6 +48,47 @@
         {% endif %}
         <div class="card-columns-vertical mt-1">
         <h5 class="">Exam results</h5>
+
+        <div class="card mt-1">
+            <!-- <HINT> If user is authenticated, show course exam with a list of question -->
+            {% if user.is_authenticated %}
+                {% if lesson.question_set.all.count == 0 %}
+                    <div class="card-header">No questions exist.</div>
+                {% else %}
+                                {% for question in lesson.question_set.all %}
+                                    <div class="card mt-1">
+                                        <div class="card-header"><h5>{{ question.question_text}}</h5></div>
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                        {% for choice in question.choice_set.all %}
+                                            {% if choice.is_correct %}
+                                              {% if choice.id in answer_ids %}
+                                                <div class="text-success">
+                                                  Correct answer:
+                                              {% else %}
+                                                <div class="text-warning">
+                                                  Not selected:
+                                              {% endif %}   
+                                            {% else %}
+                                              {% if choice.id in answer_ids %}
+                                                <div class="text-warning">
+                                                  Incorrectly selected:   
+                                              {% else %}
+                                                <div>
+                                              {% endif %}   
+                                            {% endif %}
+                                            {{ choice.choice_text }}
+                                             </div>
+                                        {% endfor %}  <!-- choice -->
+                                        </div>
+                                    </div>
+                                {% endfor %} <!-- question -->
+                {% endif %} <!-- more than 0 questions -->
+            {% endif %} <!-- user authenticated -->
+        </div>            
+
+    </div>
+
         </div>
     </div>
 </body>
