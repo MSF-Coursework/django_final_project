@@ -113,13 +113,19 @@ class Question(models.Model):
     points = models.IntegerField()
 
     # <HINT> A sample model method to calculate if learner get the score of the question
-    #def is_get_score(self, selected_ids):
-    #    all_answers = self.choice_set.filter(is_correct=True).count()
-    #    selected_correct = self.choice_set.filter(is_correct=True, id__in=selected_ids).count()
-    #    if all_answers == selected_correct:
-    #        return True
-    #    else:
-    #        return False
+    def is_get_score(self, selected_ids):
+        print('is_get_score: ', selected_ids, len(selected_ids))
+        all_answers = self.choice_set.filter(is_correct=True).count()
+        print('all_answers= ', all_answers)
+        selected_correct = self.choice_set.filter(is_correct=True, id__in=selected_ids).count()
+        print('selected_correct = ', selected_correct)
+        selected_incorrect = self.choice_set.filter(is_correct=False, id__in=selected_ids).count()
+        print('selected_incorrect = ', selected_incorrect)
+
+        if all_answers == selected_correct and selected_incorrect == 0:
+            return True
+        else:
+            return False
 
 
 #  <HINT> Create a Choice Model with:
